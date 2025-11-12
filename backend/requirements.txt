@@ -1,0 +1,15 @@
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+python-multipart==0.0.9
+pydantic==2.9.2
+chromadb==0.5.5
+ffmpeg-python==0.2.0
+moviepy==1.0.3
+python-dotenv==1.0.1
+openai>=1.0.0
+torch>=2.0.0
+transformers>=4.30.0
+accelerate>=0.20.0
+
+
+

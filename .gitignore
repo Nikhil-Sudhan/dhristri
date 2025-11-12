@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+
+# Virtual environment on Windows
+Scripts/
+
+# Data / cache
+*.sqlite3
+*.bin
+*.mp4
+
+# IDE settings
+.idea/
+.vscode/
+
+# Node / frontend
+node_modules/
+dist/
+.DS_Store
+
