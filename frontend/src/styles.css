@@ -4,5 +4,12 @@
 
 html, body, #root { height: 100%; }
 
+/* Prevent chat bubbles from overflowing when words are very long */
+.chat-bubble {
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+}
+
 
 

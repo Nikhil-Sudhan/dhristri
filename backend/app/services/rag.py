@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import List, Dict, Any, Optional
 from chromadb import PersistentClient
-from ..config import CHROMA_DIR
+from ..config import CHROMA_DIR, OPENAI_EMBEDDING_DIM
 
 _client: Optional[PersistentClient] = None
 _collection = None
@@ -17,6 +17,11 @@ def get_collection():
 
 def upsert(video_id: str, start: int, end: int, text: str, embedding: List[float]) -> None:
     col = get_collection()
+    if len(embedding) != OPENAI_EMBEDDING_DIM:
+        # Avoid inserting incompatible vectors that would break the collection
+        raise ValueError(
+            f"Embedding dim {len(embedding)} does not match expected {OPENAI_EMBEDDING_DIM}"
+        )
     col.upsert(
         ids=[f"{video_id}:{start}"],
         embeddings=[embedding],

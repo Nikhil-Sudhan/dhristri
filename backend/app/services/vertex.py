@@ -1,6 +1,11 @@
 from typing import List
 from openai import OpenAI
-from ..config import OPENAI_API_KEY, OPENAI_EMBEDDING_MODEL, OPENAI_CHAT_MODEL
+from ..config import (
+    OPENAI_API_KEY,
+    OPENAI_EMBEDDING_MODEL,
+    OPENAI_CHAT_MODEL,
+    OPENAI_EMBEDDING_DIM,
+)
 
 
 _client: OpenAI | None = None
@@ -18,6 +23,14 @@ def init_clients() -> None:
     _get_client()
 
 
+def _normalize_embedding(vec: List[float]) -> List[float]:
+    """Force embeddings to the configured dimension (truncate or pad)."""
+    if len(vec) >= OPENAI_EMBEDDING_DIM:
+        return vec[:OPENAI_EMBEDDING_DIM]
+    # pad with zeros if shorter
+    return vec + [0.0] * (OPENAI_EMBEDDING_DIM - len(vec))
+
+
 def embed_texts(texts: List[str]) -> List[List[float]]:
     """Embed texts using OpenAI embeddings API."""
     try:
@@ -26,11 +39,11 @@ def embed_texts(texts: List[str]) -> List[List[float]]:
             model=OPENAI_EMBEDDING_MODEL,
             input=texts
         )
-        return [item.embedding for item in response.data]
+        return [_normalize_embedding(item.embedding) for item in response.data]
     except Exception as e:
         # Fallback to fixed-size zero vectors so app continues to function locally
         # OpenAI embeddings are typically 1536 dimensions for text-embedding-3-small
-        return [[0.0] * 1536 for _ in texts]
+        return [[0.0] * OPENAI_EMBEDDING_DIM for _ in texts]
 
 
 def chat_completion(messages: List[dict], temperature: float = 0.7) -> str:
